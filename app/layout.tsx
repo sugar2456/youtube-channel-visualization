@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "github repository viewer",
-  description: "search github repositories",
+  title: "Youtube Channel Search",
+  description: "search youtube channels",
 };
 
 export default function RootLayout({
