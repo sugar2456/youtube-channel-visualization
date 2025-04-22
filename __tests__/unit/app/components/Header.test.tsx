@@ -13,7 +13,7 @@ describe("Header", () => {
     expect(headerElement).toBeInTheDocument();
 
     const headerContainer = headerElement.closest("header");
-    expect(headerContainer).toHaveClass("bg-green-600");
+    expect(headerContainer).toHaveClass("bg-red-500");
     expect(headerContainer).toHaveClass("text-white");
   });
 
