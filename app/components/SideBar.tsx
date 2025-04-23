@@ -15,7 +15,7 @@ export function SideBarItem({ icon, label, href = "#" }: SideBarItemProps) {
         className="flex items-center gap-2 p-2 rounded-md text-xl transition-colors hover:bg-gray-100"
       >
         {icon}
-        <span>{label}</span>
+        <span className="md:inline hidden">{label}</span>
       </a>
     </li>
   );
