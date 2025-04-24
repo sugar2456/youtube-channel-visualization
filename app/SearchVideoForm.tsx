@@ -2,6 +2,7 @@
 import { useState } from "react";
 import SearchInput from "./components/SearchInput";
 import ResultCard from "./components/ResultCard";
+import Loading from "./loading";
 
 /**
  * 動画検索と検索結果を表示するコンポーネント
@@ -44,9 +45,7 @@ export default function SearchVideoForm() {
       
       {/* 検索中のローディング表示 */}
       {isLoading && (
-        <div className="flex justify-center my-8">
-          <div data-testid="loading-spinner" className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
+        <Loading />
       )}
       
       {/* 検索結果表示エリア */}
