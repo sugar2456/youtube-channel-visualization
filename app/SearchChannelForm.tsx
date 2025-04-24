@@ -45,7 +45,7 @@ export default function SearchChannelForm() {
       {/* 検索中のローディング表示 */}
       {isLoading && (
         <div className="flex justify-center my-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <div data-testid="loading-spinner" className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       )}
       
