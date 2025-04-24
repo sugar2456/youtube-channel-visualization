@@ -36,7 +36,7 @@ describe("SearchChannelForm", () => {
         fireEvent.submit(form);
         
         // ロードインディケータが表示されることを確認
-        expect(screen.getByTestId("loading-spinner")).toBeInTheDocument();
+        expect(screen.getByRole('status')).toBeInTheDocument();
         
         // タイマーを進めて非同期処理を完了させる
         jest.advanceTimersByTime(1000);
