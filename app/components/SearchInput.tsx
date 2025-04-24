@@ -10,12 +10,13 @@ interface SearchInputProps {
 /**
  * 検索入力コンポーネント
  * 
- * チャンネル検索と動画検索で共通使用する検索フォーム
+ * チャンネル検索と動画検索で共通使用する検索フォーム  
+ * プレースホルダー、値、変更イベント、送信イベントを受け取る  
  */
 export default function SearchInput({ placeholder, value, onChange, onSubmit }: SearchInputProps) {
   return (
     <div className="flex justify-center items-center w-full">
-      <form onSubmit={onSubmit} className="w-full max-w-xl">
+      <form role="form" onSubmit={onSubmit} className="w-full max-w-xl">
         <div className="relative">
           <input
             type="text"
