@@ -19,6 +19,9 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '23.x'
+    
+    - name: jest-coverage-report
+      uses: ArtiomTr/jest-coverage-report-action@v2
 
     - name: Install dependencies
       run: npm install
