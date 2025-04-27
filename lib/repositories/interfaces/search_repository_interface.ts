@@ -67,10 +67,25 @@ export interface SearchResultItem {
       }
     >;
     channelTitle: string;
+    // ライブ配信の有無
+    // live: 現在配信中
+    // upcoming: 配信予定
+    // none: ライブ配信なし
     liveBroadcastContent?: string;
   };
 }
 
+/**
+ * SearchRepositoryInterfaceは、YouTube Data APIを利用して検索機能を提供するためのインターフェースです。
+ * 
+ * SearchRepositoryは、YouTube Data APIを通じて検索機能を提供します。
+ */
 export interface SearchRepositoryInterface {
+  /**
+   * YouTube Data APIを利用して、検索を行います。
+   * 
+   * @param params 検索パラメータ
+   * @returns 検索結果
+   */
   search(params: SearchParams): Promise<SearchResult>;
 }
