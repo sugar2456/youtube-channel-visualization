@@ -1,4 +1,5 @@
 import { SearchParams, SearchRepositoryInterface } from "../repositories/interfaces/search_repository_interface";
+import { SearchChannelResult, SearchChannelResultItem, SearchVideoResult, SearchVideoResultItem } from "./interfaces/search_channel_interface";
 
 /**
  * youtube data apiを利用したSearchServiceの実装
@@ -48,44 +49,45 @@ export default class SearchService {
 
     return result;
   }
-}
 
-/**
- * 画面で利用する情報を定義した型
- */
-export interface SearchChannelResult {
-  // 次のページがある場合はトークンが存在する
-  nextPageToken?: string;
-  // 検索結果のアイテム
-  items: SearchChannelResultItem[];
-}
+  async searchVideo(
+    q: string,
+    nextPageToken?: string
+  ): Promise<SearchVideoResult> {
+    const params: SearchParams = {
+      part: "snippet",
+      q: q,
+      type: "video",
+      pageToken: nextPageToken,
+    };
 
-export interface SearchChannelResultItem {
-  // チャンネルID
-  channelId: string;
-  // チャンネル名
-  channelTitle: string;
-  // チャンネルの説明
-  description: string;
-  // チャンネルの公開日時
-  publishedAt: string;
-  // ライブ配信コンテンツの有無
-  liveBroadcastContent?: string;
-  thumbnails: {
-    default: {
-      url: string;
-      width?: number;
-      height?: number;
+    const resultRow = await this.searchRepository.search(params);
+    
+    const resultItems: SearchVideoResultItem[] = resultRow.items.map((item) => {
+      if (!item.id.videoId && !item.snippet.title) {
+        throw new Error("videoIdが存在しません");
+      }
+      return {
+        videoId: item.id.videoId as string,
+        videoTitle: item.snippet.title,
+        channelId: item.snippet.channelId,
+        channelTitle: item.snippet.channelTitle,
+        description: item.snippet.description,
+        publishedAt: item.snippet.publishedAt,
+        liveBroadcastContent: item.snippet.liveBroadcastContent,
+        thumbnails: {
+          default: item.snippet.thumbnails.default,
+          medium: item.snippet.thumbnails.medium,
+          high: item.snippet.thumbnails.high,
+        },
+      };
+    });
+
+    const result: SearchVideoResult = {
+      nextPageToken: resultRow.nextPageToken,
+      items: resultItems,
     };
-    medium: {
-      url: string;
-      width?: number;
-      height?: number;
-    };
-    high: {
-      url: string;
-      width?: number;
-      height?: number;
-    };
-  };
+
+    return result;
+  }
 }
