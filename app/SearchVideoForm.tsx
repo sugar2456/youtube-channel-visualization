@@ -3,6 +3,8 @@ import { useState } from "react";
 import SearchInput from "./components/SearchInput";
 import ResultCard from "./components/ResultCard";
 import Loading from "./loading";
+import { searchVideoAction } from "./actions/search_action";
+import { SearchVideoResultItem } from "@/lib/services/interfaces/search_channel_interface";
 
 /**
  * 動画検索と検索結果を表示するコンポーネント
@@ -10,26 +12,50 @@ import Loading from "./loading";
  */
 export default function SearchVideoForm() {
   const [searchValue, setSearchValue] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [searchResults, setSearchResults] = useState<any[]>([]); // 本来は適切な型定義が必要です
+  const [searchResults, setSearchResults] = useState<SearchVideoResultItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [nextPageToken, setNextPageToken] = useState<string | undefined>(undefined);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchValue.trim()) return;
 
     setIsLoading(true);
     
-    // 仮の検索結果データ（実際の実装では API 呼び出しなどを行います）
-    setTimeout(() => {
-      const mockResults = [
-        { id: 1, title: `動画: ${searchValue}`, description: "動画の説明文がここに表示されます。" },
-        { id: 2, title: `関連動画 1`, description: "再生回数: 10,000回" },
-        { id: 3, title: `関連動画 2`, description: "公開日: 2023年10月1日" },
-      ];
-      setSearchResults(mockResults);
+    try {
+      // サーバーアクションを呼び出して検索を実行
+      const result = await searchVideoAction(searchValue);
+      
+      // 検索結果とページトークンを保存
+      setSearchResults(result.items);
+      setNextPageToken(result.nextPageToken);
+    } catch (error) {
+      console.error("検索中にエラーが発生しました:", error);
+      // エラー処理を追加することができます
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
+  };
+
+  // 次のページを読み込む関数
+  const loadMoreResults = async () => {
+    if (!nextPageToken || !searchValue) return;
+    
+    setIsLoading(true);
+    
+    try {
+      // 次のページトークンを使って検索を実行
+      const result = await searchVideoAction(searchValue, nextPageToken);
+      
+      // 新しい検索結果を追加
+      setSearchResults([...searchResults, ...result.items]);
+      // 次のページトークンを更新
+      setNextPageToken(result.nextPageToken);
+    } catch (error) {
+      console.error("追加データの読み込み中にエラーが発生しました:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -52,14 +78,35 @@ export default function SearchVideoForm() {
       {!isLoading && searchResults.length > 0 && (
         <div className="mt-8 space-y-4">
           <h2 className="text-xl font-semibold">検索結果</h2>
-          {searchResults.map((result) => (
+          {searchResults.map((result, index) => (
             <ResultCard
-              key={result.id}
-              title={result.title}
+              key={`${result.videoId}-${index}`}
+              title={result.videoTitle}
               description={result.description}
+              imageUrl={result.thumbnails.medium?.url || result.thumbnails.default?.url}
               onClick={() => console.log("選択された動画:", result)}
+              additionalInfo={
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span>チャンネル: {result.channelTitle}</span>
+                  <span>•</span>
+                  <span>公開日: {new Date(result.publishedAt).toLocaleDateString('ja-JP')}</span>
+                </div>
+              }
             />
           ))}
+          
+          {/* 次のページがある場合、「もっと読み込む」ボタンを表示 */}
+          {nextPageToken && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={loadMoreResults}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"
+                disabled={isLoading}
+              >
+                もっと読み込む
+              </button>
+            </div>
+          )}
         </div>
       )}
       
