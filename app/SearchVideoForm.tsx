@@ -74,30 +74,32 @@ export default function SearchVideoForm() {
         <Loading />
       )}
       
-      {/* 検索結果表示エリア */}
+      {/* 検索結果表示エリア - スクロール可能エリアを追加 */}
       {!isLoading && searchResults.length > 0 && (
-        <div className="mt-8 space-y-4">
+        <div className="mt-4 space-y-4 flex flex-col h-full">
           <h2 className="text-xl font-semibold">検索結果</h2>
-          {searchResults.map((result, index) => (
-            <ResultCard
-              key={`${result.videoId}-${index}`}
-              title={result.videoTitle}
-              description={result.description}
-              imageUrl={result.thumbnails.medium?.url || result.thumbnails.default?.url}
-              onClick={() => console.log("選択された動画:", result)}
-              additionalInfo={
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <span>チャンネル: {result.channelTitle}</span>
-                  <span>•</span>
-                  <span>公開日: {new Date(result.publishedAt).toLocaleDateString('ja-JP')}</span>
-                </div>
-              }
-            />
-          ))}
+          <div className="overflow-y-auto flex-grow pr-2" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+            {searchResults.map((result, index) => (
+              <ResultCard
+                key={`${result.videoId}-${index}`}
+                title={result.videoTitle}
+                description={result.description}
+                imageUrl={result.thumbnails.medium?.url || result.thumbnails.default?.url}
+                onClick={() => console.log("選択された動画:", result)}
+                additionalInfo={
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <span>チャンネル: {result.channelTitle}</span>
+                    <span>•</span>
+                    <span>公開日: {new Date(result.publishedAt).toLocaleDateString('ja-JP')}</span>
+                  </div>
+                }
+              />
+            ))}
+          </div>
           
           {/* 次のページがある場合、「もっと読み込む」ボタンを表示 */}
           {nextPageToken && (
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center">
               <button
                 onClick={loadMoreResults}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition"

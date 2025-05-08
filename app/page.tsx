@@ -12,10 +12,10 @@ import SearchVideoForm from "./SearchVideoForm";
 export default function Page() {
   return (
     <div className="flex md:flex-row flex-col w-full gap-2">
-      <div className="flex-1">
+      <div className="w-full md:w-1/2">
         <SearchChannelForm />
       </div>
-      <div className="flex-1">
+      <div className="w-full md:w-1/2">
         <SearchVideoForm />
       </div>
     </div>
