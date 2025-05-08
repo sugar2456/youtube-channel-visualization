@@ -52,7 +52,7 @@ const sideBarItems: SideBarItemData[] = [
 
 export default function SideBar() {
   return (
-    <aside className="flex flex-col w-1/7 bg-white p-4 shadow">
+    <aside className="flex flex-col w-full bg-white p-4 shadow h-full">
       <ul className="space-y-2">
         {sideBarItems.map((item) => (
           <SideBarItem
