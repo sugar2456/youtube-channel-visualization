@@ -8,6 +8,9 @@ export default class SearchRepository implements SearchRepositoryInterface {
   async search(params: SearchParams): Promise<SearchResult> {
     const url = new URL("https://www.googleapis.com/youtube/v3/search");
 
+    // APIキーをクエリパラメータとして追加
+    url.searchParams.append("key", process.env.YOUTUBE_API_KEY || "");
+
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         url.searchParams.append(key, String(value));
@@ -19,7 +22,6 @@ export default class SearchRepository implements SearchRepositoryInterface {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.YOUTUBE_API_KEY}`,
         },
       });
 
