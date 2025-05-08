@@ -80,7 +80,7 @@ describe('SearchRepository', () => {
       
       // URLをチェック - 日本語はエンコードされるため、エンコード後の値で比較する
       const encodedQuery = encodeURIComponent('テスト検索');
-      const expectedUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodedQuery}&maxResults=5&type=video`;
+      const expectedUrl = `https://www.googleapis.com/youtube/v3/search?key=test-api-key&part=snippet&q=${encodedQuery}&maxResults=5&type=video`;
       const actualCallUrl = fetchMock.mock.calls[0][0] as string;
       expect(actualCallUrl).toBe(expectedUrl);
       
@@ -88,7 +88,6 @@ describe('SearchRepository', () => {
       const options = fetchMock.mock.calls[0][1];
       expect(options).toHaveProperty('headers');
       expect(options?.headers).toHaveProperty('Content-Type', 'application/json');
-      expect(options?.headers).toHaveProperty('Authorization', `Bearer test-api-key`);
       
       // 結果をチェック
       expect(result).toEqual(mockSearchResult);
@@ -126,7 +125,7 @@ describe('SearchRepository', () => {
 
       // 検証 - URLには part と q だけが含まれているはず
       const encodedQuery = encodeURIComponent('テスト');
-      const expectedUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodedQuery}`;
+      const expectedUrl = `https://www.googleapis.com/youtube/v3/search?key=test-api-key&part=snippet&q=${encodedQuery}`;
       const actualCallUrl = fetchMock.mock.calls[0][0] as string;
       expect(actualCallUrl).toBe(expectedUrl);
     });
