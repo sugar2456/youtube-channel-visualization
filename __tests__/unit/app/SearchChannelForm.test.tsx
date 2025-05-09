@@ -8,6 +8,15 @@ jest.mock("@/app/actions/search_action", () => ({
   searchChannelAction: jest.fn(),
 }));
 
+// Next.js のuseRouterをモック
+const mockPush = jest.fn();
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    prefetch: jest.fn(),
+  }),
+}));
+
 describe("SearchChannelForm", () => {
     beforeEach(() => {
         // 各テスト前にモックをリセット
@@ -190,5 +199,47 @@ describe("SearchChannelForm", () => {
             expect(screen.getByText("最初のチャンネル")).toBeInTheDocument();
             expect(screen.getByText("二番目のチャンネル")).toBeInTheDocument();
         });
+    });
+
+    it("チャンネルカードクリック時に正しいURLへ遷移することをテスト", async () => {
+        // モックの検索結果を設定
+        const mockSearchResult = {
+            nextPageToken: undefined,
+            items: [
+                {
+                    channelId: "test-channel-id",
+                    channelTitle: "テストチャンネル",
+                    description: "テストチャンネルの説明です",
+                    publishedAt: "2023-01-01T00:00:00Z",
+                    thumbnails: {
+                        default: { url: "https://example.com/thumb.jpg" },
+                        medium: { url: "https://example.com/thumb-medium.jpg" },
+                        high: { url: "https://example.com/thumb-high.jpg" }
+                    }
+                }
+            ]
+        };
+
+        // サーバーアクションのモック
+        (searchChannelAction as jest.Mock).mockResolvedValue(mockSearchResult);
+        
+        // コンポーネントをレンダリング
+        render(<SearchChannelForm />);
+        
+        // 検索を実行
+        const input = screen.getByPlaceholderText("チャンネルを検索");
+        fireEvent.change(input, { target: { value: "テスト" } });
+        fireEvent.submit(screen.getByRole("form"));
+        
+        // 結果が表示されるまで待機
+        await waitFor(() => {
+            expect(screen.getByText("テストチャンネル")).toBeInTheDocument();
+        });
+        
+        // チャンネルカードをクリック
+        fireEvent.click(screen.getByText("テストチャンネル"));
+        
+        // router.pushが正しいURLで呼び出されたことを確認
+        expect(mockPush).toHaveBeenCalledWith("/channel/test-channel-id");
     });
 });
