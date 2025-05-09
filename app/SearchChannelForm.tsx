@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SearchInput from "./components/SearchInput";
 import ResultCard from "./components/ResultCard";
 import Loading from "./loading";
@@ -11,6 +12,7 @@ import { SearchChannelResultItem } from "@/lib/services/interfaces/search_channe
  * @returns {JSX.Element}
  */
 export default function SearchChannelForm() {
+  const router = useRouter();
   // 検索ワード
   const [searchValue, setSearchValue] = useState("");
   // 検索結果
@@ -89,7 +91,7 @@ export default function SearchChannelForm() {
                 title={result.channelTitle}
                 description={result.description}
                 imageUrl={result.thumbnails.medium?.url || result.thumbnails.default?.url}
-                onClick={() => console.log("選択されたチャンネル:", result)}
+                onClick={() => router.push(`/channel/${result.channelId}`)}
                 additionalInfo={
                   <div className="flex items-center text-xs text-gray-500">
                     <span>公開日: {new Date(result.publishedAt).toLocaleDateString('ja-JP')}</span>
