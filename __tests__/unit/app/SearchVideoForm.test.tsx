@@ -8,6 +8,15 @@ jest.mock("@/app/actions/search_action", () => ({
   searchVideoAction: jest.fn(),
 }));
 
+// Next.js のuseRouterをモック
+const mockPush = jest.fn();
+jest.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: mockPush,
+    prefetch: jest.fn(),
+  }),
+}));
+
 describe("SearchVideoForm", () => {
     beforeEach(() => {
         // 各テスト前にモックをリセット
@@ -205,5 +214,49 @@ describe("SearchVideoForm", () => {
             expect(screen.getByText("最初のビデオ")).toBeInTheDocument();
             expect(screen.getByText("二番目のビデオ")).toBeInTheDocument();
         });
+    });
+
+    it("動画カードクリック時に正しいURLへ遷移することをテスト", async () => {
+        // モックの検索結果を設定
+        const mockSearchResult = {
+            nextPageToken: undefined,
+            items: [
+                {
+                    videoId: "test-video-id",
+                    videoTitle: "テスト動画",
+                    channelId: "test-channel-id",
+                    channelTitle: "テストチャンネル",
+                    description: "テスト動画の説明です",
+                    publishedAt: "2023-01-01T00:00:00Z",
+                    thumbnails: {
+                        default: { url: "https://example.com/thumb.jpg" },
+                        medium: { url: "https://example.com/thumb-medium.jpg" },
+                        high: { url: "https://example.com/thumb-high.jpg" }
+                    }
+                }
+            ]
+        };
+
+        // サーバーアクションのモック
+        (searchVideoAction as jest.Mock).mockResolvedValue(mockSearchResult);
+        
+        // コンポーネントをレンダリング
+        render(<SearchVideoForm />);
+        
+        // 検索を実行
+        const input = screen.getByPlaceholderText("動画を検索");
+        fireEvent.change(input, { target: { value: "テスト" } });
+        fireEvent.submit(screen.getByRole("form"));
+        
+        // 結果が表示されるまで待機
+        await waitFor(() => {
+            expect(screen.getByText("テスト動画")).toBeInTheDocument();
+        });
+        
+        // 動画カードをクリック
+        fireEvent.click(screen.getByText("テスト動画"));
+        
+        // router.pushが正しいURLで呼び出されたことを確認
+        expect(mockPush).toHaveBeenCalledWith("/video/test-video-id");
     });
 });

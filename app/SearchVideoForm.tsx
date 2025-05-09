@@ -5,12 +5,14 @@ import ResultCard from "./components/ResultCard";
 import Loading from "./loading";
 import { searchVideoAction } from "./actions/search_action";
 import { SearchVideoResultItem } from "@/lib/services/interfaces/search_channel_interface";
+import { useRouter } from "next/navigation";
 
 /**
  * 動画検索と検索結果を表示するコンポーネント
  * @returns {JSX.Element}
  */
 export default function SearchVideoForm() {
+  const router = useRouter();
   const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState<SearchVideoResultItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,7 +87,7 @@ export default function SearchVideoForm() {
                 title={result.videoTitle}
                 description={result.description}
                 imageUrl={result.thumbnails.medium?.url || result.thumbnails.default?.url}
-                onClick={() => console.log("選択された動画:", result)}
+                onClick={() => router.push(`/video/${result.videoId}`)}
                 additionalInfo={
                   <div className="flex items-center gap-2 text-xs text-gray-500">
                     <span>チャンネル: {result.channelTitle}</span>
