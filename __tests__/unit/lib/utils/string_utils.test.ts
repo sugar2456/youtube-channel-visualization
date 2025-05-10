@@ -1,4 +1,9 @@
-import { splitString, parseLinkHeaders, getQueryParams } from "@/lib/utils/string_utils";
+import {
+  splitString,
+  parseLinkHeaders,
+  getQueryParams,
+  convertNewLineToBr,
+} from "@/lib/utils/string_utils";
 
 describe("StringUtils", () => {
   it("splitString 定義テスト", () => {
@@ -40,21 +45,21 @@ describe("StringUtils", () => {
       "入力文字列と区切り文字を指定してください。"
     );
   });
-  
+
   it("splitString null の場合", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(() => splitString(null as any, ",")).toThrow(
       "入力文字列と区切り文字を指定してください。"
     );
   });
-  
+
   it("splitString 区切り文字が undefined の場合", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(() => splitString("test,example", undefined as any)).toThrow(
       "入力文字列と区切り文字を指定してください。"
     );
   });
-  
+
   it("splitString 区切り文字が null の場合", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect(() => splitString("test,example", null as any)).toThrow(
@@ -101,7 +106,7 @@ describe("StringUtils", () => {
       { url: "https://api.github.com/user/789", rel: "next" },
     ]);
   });
-  
+
   it("parseLinkHeaders 配列4つ", () => {
     const result = parseLinkHeaders([
       '<https://api.github.com/user/123>; rel="first"',
@@ -116,7 +121,7 @@ describe("StringUtils", () => {
       { url: "https://api.github.com/user/101", rel: "prev" },
     ]);
   });
-  
+
   it("parseLinkHeaders 空配列", () => {
     const result = parseLinkHeaders([]);
     expect(result).toEqual([]);
@@ -125,35 +130,46 @@ describe("StringUtils", () => {
   it("parseLinkHeaders 不正なフォーマット rel", () => {
     expect(() =>
       parseLinkHeaders(['<https://api.github.com/user/123>; drel="invalid"'])
-    ).toThrow('ヘッダーのフォーマットが不正です: <https://api.github.com/user/123>; drel="invalid"');
+    ).toThrow(
+      'ヘッダーのフォーマットが不正です: <https://api.github.com/user/123>; drel="invalid"'
+    );
   });
 
   it("parseLinkHeaders 不正なフォーマット url", () => {
     expect(() =>
       parseLinkHeaders(['https://api.github.com/user/123>; rel="invalid"'])
-    ).toThrow('ヘッダーのフォーマットが不正です: https://api.github.com/user/123>; rel="invalid"');
+    ).toThrow(
+      'ヘッダーのフォーマットが不正です: https://api.github.com/user/123>; rel="invalid"'
+    );
   });
 
   it("parseLinkHeaders 不正なフォーマット url2", () => {
     expect(() =>
       parseLinkHeaders(['<https://api.github.com/user/123; rel="invalid"'])
-    ).toThrow('ヘッダーのフォーマットが不正です: <https://api.github.com/user/123; rel="invalid"');
+    ).toThrow(
+      'ヘッダーのフォーマットが不正です: <https://api.github.com/user/123; rel="invalid"'
+    );
   });
 
   it("parseLinkHeaders 不正なフォーマット url3", () => {
     expect(() =>
       parseLinkHeaders(['<https://api.github.com/user/123>; relinvalid"'])
-    ).toThrow('ヘッダーのフォーマットが不正です: <https://api.github.com/user/123>; relinvalid"');
+    ).toThrow(
+      'ヘッダーのフォーマットが不正です: <https://api.github.com/user/123>; relinvalid"'
+    );
   });
 
   it("getQueryParams 定義テスト", () => {
-    const result = getQueryParams("https://example.com?param1=value1&param2=value2");
+    const result = getQueryParams(
+      "https://example.com?param1=value1&param2=value2"
+    );
     expect(result).toBeDefined();
-  }
-  );
+  });
 
   it("getQueryParams クエリパラメータあり", () => {
-    const result = getQueryParams("https://example.com?param1=value1&param2=value2");
+    const result = getQueryParams(
+      "https://example.com?param1=value1&param2=value2"
+    );
     expect(result).toEqual({
       param1: "value1",
       param2: "value2",
@@ -183,5 +199,22 @@ describe("StringUtils", () => {
       param1: "value1",
       param2: "",
     });
+  });
+
+  it("convertNewLineToBr 定義テスト", () => {
+    const result = convertNewLineToBr("test\nexample");
+    expect(result).toBeDefined();
+  });
+  it("convertNewLineToBr 改行あり", () => {
+    const result = convertNewLineToBr("test\nexample");
+    expect(result).toEqual("test<br>example");
+  });
+  it("convertNewLineToBr 改行なし", () => {
+    const result = convertNewLineToBr("test example");
+    expect(result).toEqual("test example");
+  });
+  it("convertNewLineToBr 空文字", () => {
+    const result = convertNewLineToBr("");
+    expect(result).toEqual("");
   });
 });
