@@ -1,11 +1,9 @@
 import { Suspense } from "react";
 import WrapperSummaryComponent from "./wrapper_summary_component";
 
-// App Routerでは、パラメータはpropsとして受け取ります
-interface PageProps {
-  params: {
-    channelId: string;
-  };
+// Next.js 14以降では組み込みの型を使用
+type Props = {
+  params: Promise<{ channelId: string }>;
 }
 
 // ローディング表示用のコンポーネント
@@ -30,7 +28,7 @@ function LoadingFallback() {
   );
 }
 
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: Props) {
   const { channelId } = await params;
   
   return (
