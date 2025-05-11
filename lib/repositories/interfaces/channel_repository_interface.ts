@@ -25,17 +25,12 @@ export interface ChannelResult {
 export interface ChannelResultItem {
   kind: string
   etag: string
-  id: {
-    kind: string
-    videoId?: string
-    channelId?: string
-    playlistId?: string
-  }
+  id: string
   snippet: {
     publishedAt: string
-    channelId: string
     title: string
     description: string
+    customUrl?: string
     thumbnails: {
       default: {
         url: string
@@ -53,8 +48,6 @@ export interface ChannelResultItem {
         height?: number
       }
     }
-    channelTitle: string
-    liveBroadcastContent?: string
     country?: string
   }
   contentDetails: {
@@ -65,19 +58,12 @@ export interface ChannelResultItem {
       watchHistory: string
       watchLater: string
     }
-    googlePlusUserId: string
-    subscriberCount: number
-    videoCount: number
-    viewCount: number
+  },
+  statistics: {
+    viewCount: string
+    subscriberCount: string
     hiddenSubscriberCount: boolean
-    defaultLanguage: string
-    localized: {
-      title: string
-      description: string
-    }
-    customUrl: string
-    publishedAt: string
-    country: string
+    videoCount: string
   }
 }
 

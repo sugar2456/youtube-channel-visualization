@@ -36,13 +36,9 @@ describe('ChannelRepository', () => {
         items: [{
           kind: 'youtube#channel',
           etag: 'item-etag',
-          id: {
-            kind: 'youtube#channel',
-            channelId: 'test-channel-id'
-          },
+          id: 'test-channel-id',
           snippet: {
             publishedAt: '2023-01-01T00:00:00Z',
-            channelId: 'test-channel-id',
             title: 'テストチャンネル',
             description: 'これはテストチャンネルの説明です',
             thumbnails: {
@@ -62,7 +58,6 @@ describe('ChannelRepository', () => {
                 height: 800
               }
             },
-            channelTitle: 'テストチャンネル',
             country: 'JP'
           },
           contentDetails: {
@@ -73,19 +68,12 @@ describe('ChannelRepository', () => {
               watchHistory: 'watch-history-playlist-id',
               watchLater: 'watch-later-playlist-id'
             },
-            googlePlusUserId: 'google-plus-user-id',
-            subscriberCount: 1000,
-            videoCount: 50,
-            viewCount: 10000,
+          },
+          statistics: {
+            viewCount: '10000',
+            subscriberCount: '1000',
             hiddenSubscriberCount: false,
-            defaultLanguage: 'ja',
-            localized: {
-              title: 'テストチャンネル',
-              description: 'これはテストチャンネルの説明です'
-            },
-            customUrl: '@test-channel',
-            publishedAt: '2023-01-01T00:00:00Z',
-            country: 'JP'
+            videoCount: '50'
           }
         }]
       };
