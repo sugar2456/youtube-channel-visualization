@@ -30,11 +30,11 @@ export function SummaryComponent({ channelId, title, description, customUrl, pub
           />
           <div className="flex flex-col justify-center">
             <p className="text-3xl">チャンネル名: {title}</p>
-            <p className="text-lg">チャンネルID: {channelId}</p>
+            <p className="text-lg">チャンネルID: {channelId ?? "----"}</p>
           </div>
         </div>
         <div className="text-gray-600 border-2 rounded-2xl p-2">説明: <span dangerouslySetInnerHTML={{ __html: convertNewLineToBr(description) }} /></div>
-        <p className="text-gray-600">カスタムURL: {customUrl}</p>
+        <p className="text-gray-600">カスタムURL: {customUrl ?? "----"}</p>
         <p className="text-gray-600">公開日: {new Date(publishedAt).toLocaleDateString('ja-JP')}</p>
         <p className="text-gray-600">国: {country}</p>
         </div>
