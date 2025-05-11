@@ -200,6 +200,7 @@ describe("SearchService", () => {
       q: "テスト検索",
       type: "channel",
       pageToken: undefined,
+      maxResults: 20,
     });
     
     expect(result).toEqual({
@@ -270,6 +271,7 @@ describe("SearchService", () => {
       q: "テスト検索",
       type: "channel",
       pageToken: undefined,
+      maxResults: 20,
     });
     
     expect(result).toEqual({
@@ -340,6 +342,7 @@ describe("SearchService", () => {
       q: "テスト検索",
       type: "channel",
       pageToken: "test-page-token",
+      maxResults: 20,
     });
     
     expect(result.nextPageToken).toBe("next-page-token");
@@ -416,6 +419,7 @@ describe("SearchService", () => {
       q: "テスト動画検索",
       type: "video",
       pageToken: undefined,
+      maxResults: 20,
     });
     
     expect(result).toEqual({
@@ -490,6 +494,7 @@ describe("SearchService", () => {
       q: "テスト動画検索",
       type: "video",
       pageToken: undefined,
+      maxResults: 20,
     });
     
     expect(result).toEqual({
@@ -564,6 +569,7 @@ describe("SearchService", () => {
       q: "テスト動画検索",
       type: "video",
       pageToken: "video-page-token",
+      maxResults: 20,
     });
     
     expect(result.nextPageToken).toBe("video-next-page-token");

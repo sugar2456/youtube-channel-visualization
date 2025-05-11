@@ -20,6 +20,7 @@ export default class SearchService {
       q: q,
       type: "channel",
       pageToken: nextPageToken,
+      maxResults: 20,
     };
 
     const resultRow = await this.searchRepository.search(params);
@@ -59,6 +60,7 @@ export default class SearchService {
       q: q,
       type: "video",
       pageToken: nextPageToken,
+      maxResults: 20,
     };
 
     const resultRow = await this.searchRepository.search(params);

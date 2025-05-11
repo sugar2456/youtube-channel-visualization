@@ -32,3 +32,10 @@ export function getQueryParams(url: string): Record<string, string> {
 
   return params;
 }
+
+export function convertNewLineToBr(text: string): string {
+  if (!text) {
+    return '';
+  }
+  return text.replace(/\n/g, '<br>');
+}
